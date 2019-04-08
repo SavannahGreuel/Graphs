@@ -89,7 +89,39 @@ class Graph:
             if neighbor not in visited:
                 self.dft_r(neighbor,visited)
 
+    # TODO breadth first search
+    def bfs(self, starting_vertex_id, target):
+        q = Queue()
+        visited = set()
+        # start with starting vertex id in the queue
+        q.enqueue([starting_vertex_id])
+        while q.size() > 0:
+            path = q.dequeue()
+            print(path)
+            v = path[-1]
+            if v not in visited:
+                return path
+            for neighbor in self.verticies[v]:
+                new_path = list(path)
+                new_path.append(neighbor)
+                q.enqueue(new_path)
 
+    # TODO deapth first search
+    def dfs(self, start, end):
+        s = Stack()
+        visited = set()
+        # push starting vertex into stack
+        s.push(start)
+        while end not in visited:
+            v = s.pop()
+            if v not in visited:
+                print(v)
+                visited.add(v)
+                if v is not None:
+                    for neighbor in self.verticies[v]:
+                        s.push(neighbor)
+                    else:
+                        return print("they do not connect")
 
 graph = Graph()  # Instantiate your graph
 graph.add_vertex('0')
