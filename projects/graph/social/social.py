@@ -1,4 +1,5 @@
-
+from random import randint
+from queue import *
 
 class User:
     def __init__(self, name):
@@ -45,10 +46,32 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
         # !!!! IMPLEMENT ME
-
+        # while the number of friendships is less than the total number of users
+        if not numUsers > avgFriendships:
+            avgFriendships = numUsers - 1
         # Add users
+        for num in range(1, numUsers + 1):
+            self.addUser(num)
 
         # Create friendships
+        all_friendships = (numUsers * avgFriendships) // 2
+        friendships = []
+
+        while len(friendships) < all_friendships:
+            #generate all possible friendship combinations
+            possibilities = sorted([randint(1, numUsers), randint(1, numUsers)])
+            # discard if friends with themselves
+            if possibilities [0] == possibilities [1]:
+                continue
+            # discard if friendship already exists
+            if possibilities in friendships:
+                continue
+            
+            # add friendship 
+            friendships.append(possibilities)
+        
+        for friendship in friendships:
+            self.addFriendship(friendship[0], friendship[1])
 
     def getAllSocialPaths(self, userID):
         """
@@ -61,6 +84,17 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        queue = Queue()
+        queue.put([userID])
+
+        while not queue.empty():
+            current_path = queue.get()
+            current = current_path[-1]
+            if current not in visited:
+                visited[current] = current_path
+                for item in self.friendships[current]:
+                    if item not in visited:
+                        queue.put(list(current_path) + [item])
         return visited
 
 
