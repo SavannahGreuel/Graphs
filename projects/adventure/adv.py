@@ -26,7 +26,43 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
+traversalPath = []
+
+ # keeps track of visited rooms
+visited = {}
+
+#  use current rooms getExit to find all exits 
+exits = player.currentRoom.getExits()
+
+# current rooms id
+room_id = player.currentRoom.id
+
+#  put a question mark as a placeholder to start
+visited[room_id] =  {exits[i]: "?" for i in range(0,len(exits))}
+
+# backwards path
+backwards = []
+
+# while length of visited is less than total rooms in graph
+# and if players current room is not in the visited dictionary
+# add current room and the exits with question maks to the visited dictionary
+# if there is a room from before, set the direction you came from to that room using getroomindirection and backwards 
+
+# find out what unexplored exits exist and add to the list
+
+# while there are no unexplored rooms , but there are still elements in backwards
+# pop off backwards path to use as next move
+# add move to the traveralpath
+# move in that direction
+# find new exits
+# reset available exits
+
+# set rooms last exit to room in that direction
+
+# set next move as last exit in list
+# add the opposit of your move to the backwards path
+# add new move to path
+# move that way
 
 
 
