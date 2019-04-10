@@ -34,35 +34,55 @@ visited = {}
 #  use current rooms getExit to find all exits 
 exits = player.currentRoom.getExits()
 
-# current rooms id
-room_id = player.currentRoom.id
-
 #  put a question mark as a placeholder to start
-visited[room_id] =  {exits[i]: "?" for i in range(0,len(exits))}
+visited[player.currentRoom.id] =  {exits[i]: "?" for i in range(0,len(exits))}
 
 # backwards path
 backwards = []
 
 # while length of visited is less than total rooms in graph
-# and if players current room is not in the visited dictionary
-# add current room and the exits with question maks to the visited dictionary
-# if there is a room from before, set the direction you came from to that room using getroomindirection and backwards 
+while len(visited) < len(roomGraph) - 1:
+    # and if players current room is not in the visited dictionary
+    if player.currentRoom.id not in visited:
+    # add current room and the exits with question maks to the visited dictionary
+        exits = player.currentRoom.getExits()
+        visited[player.currentRoom.id] = {exits[i]: "?" for i in range(0,len(exits))}
+        # if there is a room from before, set the direction you came from to that room using getroomindirection and backwards 
+        visited[player.currentRoom.id][backwards[-1]] = player.currentRoom.getRoomInDirection(backwards[-1])
 
-# find out what unexplored exits exist and add to the list
-
-# while there are no unexplored rooms , but there are still elements in backwards
-# pop off backwards path to use as next move
-# add move to the traveralpath
-# move in that direction
-# find new exits
-# reset available exits
-
+    # find out what unexplored exits exist and add to the list
+    all_exits = []
+    for _exit_, room in visited[player.currentRoom.id].items():
+        if room == "?":
+            all_exits.append(_exit_)
+    # while there are no unexplored rooms , but there are still elements in backwards
+    while len(all_exits) == 0 and len(backwards) > 0:
+        # pop off backwards path to use as next move
+        move_back = backwards.pop()
+        # add move to the traveralpath
+        traversalPath.append(move_back)
+        # move in that direction
+        player.travel(move_back)
+        # find new exits
+        new_exits = []
+        
+        for _exit_, room in visited[player.currentRoom.id].items():
+            if room == "?":
+                new_exits.append(_exit_)
+        # reset available exits
+        all_exits = new_exits
 # set rooms last exit to room in that direction
+    visited[player.currentRoom.id][all_exits[-1]] = player.currentRoom.getRoomInDirection(all_exits[-1])
 
 # set next move as last exit in list
+    move = all_exits.pop()
 # add the opposit of your move to the backwards path
+    opposite_directions = { 'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
+    backwards.append(opposite_directions[move])
 # add new move to path
+    traversalPath.append(move)
 # move that way
+    player.travel(move)
 
 
 
